@@ -2,7 +2,7 @@ import java.io.*;
 import java.net.*;
 
 class Server {
-    public Server() throws Exception {
+    public static void main(String args[]) throws Exception {
         String clientSentence;
         String capitalizedSentence;
         ServerSocket welcomeSocket = new ServerSocket(9090);

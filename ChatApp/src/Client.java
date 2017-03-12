@@ -3,7 +3,7 @@ import java.net.*;
 
 class Client
 {
-    public Client() throws Exception
+    public static void main(String args[]) throws Exception
     {
         String sentence;
         String modifiedSentence;
