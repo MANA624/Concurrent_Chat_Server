@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by Tiffany on 3/19/2017.
  */
 public class Queue {
-    private int head, tail;
+    private volatile int head, tail;
     private int[] requests;
     private ReentrantLock lock;
     public Queue (int capacity){
@@ -30,22 +30,12 @@ public class Queue {
         }
     }
     public int deq() throws Exception{
-        lock.lock();
-        try {
-            if (tail == head) {
-
-                throw new Exception("Queue is empty");
-            }
-            int x = requests[head % requests.length];
-            head++;
-            return x;
+        if (tail == head) {
+            throw new Exception("Queue is empty");
         }
-        finally {
-            lock.unlock();
-        }
-
-
+        int x = requests[head % requests.length];
+        head++;
+        return x;
     }
-
 }
 
