@@ -7,23 +7,26 @@ import java.util.concurrent.TimeUnit;
 import java.lang.Thread;
 
 class Server {
-    private static Mediator allUsers[] = new Mediator[2];
+    private static Mediator allUsers[] = new Mediator[10];
     private static int numUsers = 0;
+    private static Queue messageQueue = new Queue(20);
 
     public static void main(String args[]) throws Exception {
-        String clientSentence;
-        String capitalizedSentence;
+        String sendAll;
         new Thread(Server::listener).start();
 
 
 
         while(true) {
-            System.out.println(numUsers);
+            //System.out.println(numUsers);
             TimeUnit.SECONDS.sleep(1);
             // Q.lock()
             // message = Q.dequeue()
             // Q.unlock()
             // user.writeMessage(message)
+            /*
+            Old code
+
             if (numUsers == 2) {
                 for (Mediator mediator : allUsers) {
                     mediator.writeMessage("Hello worfhsjklafskjdhld\n");
@@ -33,6 +36,13 @@ class Server {
                     mediator.writeMessage("Close\n");
                 }
                 break;
+            */
+            if(!(sendAll = messageQueue.deq()).equals("")) {
+                for (Mediator mediator : allUsers) {
+                    try {
+                        mediator.writeMessage(sendAll + "\n");
+                    }catch (Exception e){}
+                }
             }
         }
 
@@ -55,7 +65,7 @@ class Server {
             try {
                 connectionSocket = welcomeSocket.accept();
                 newMediator = new Mediator(connectionSocket);
-                new Thread(newMediator);
+                new Thread(newMediator).start();
                 newMediator.writeMessage("Welcome to the chat room!\n");
             }catch(Exception e){
                 e.printStackTrace();
@@ -65,6 +75,11 @@ class Server {
             allUsers[numUsers] = newMediator;
             numUsers++;
         }
+    }
+
+    // Pushes the messages onto the queue
+    static void writeQueue(String message){
+        messageQueue.enq(message);
     }
 
 

@@ -2,24 +2,38 @@ package Server;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * Created by Tiffany on 3/19/2017.
- */
 public class Queue {
+
+    // Main method created to test the queue
+
+    public static void main(String args[]){
+        String test;
+        /*
+        Queue queue = new Queue(10);
+        queue.enq("Hello my friend!");
+        if(!(test = queue.deq()).equals("")) {
+            System.out.println(test);
+        }
+        if(!(test = queue.deq()).equals("")) {
+            System.out.println(test);
+        }
+        */
+    }
+
     private volatile int head, tail;
-    private int[] requests;
+    private String[] requests;
     private ReentrantLock lock;
     public Queue (int capacity){
         head = 0;
         tail = 0;
         lock = new ReentrantLock();
-
+        requests = new String[capacity];
     }
-    public void enq(int request) throws Exception{
+    public boolean enq(String request){
         lock.lock();
         try{
             if(tail - head == requests.length){
-                throw new Exception("Queue is full");
+                return false;
             }
             requests[tail % requests.length] = request;
             tail ++;
@@ -28,12 +42,13 @@ public class Queue {
         finally{
             lock.unlock();
         }
+        return true;
     }
-    public int deq() throws Exception{
+    public String deq(){
         if (tail == head) {
-            throw new Exception("Queue is empty");
+            return "";
         }
-        int x = requests[head % requests.length];
+        String x = requests[head % requests.length];
         head++;
         return x;
     }
