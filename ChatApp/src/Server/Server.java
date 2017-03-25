@@ -2,6 +2,9 @@
 
 package Server;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
 import java.net.*;
 import java.util.concurrent.TimeUnit;
 import java.lang.Thread;
@@ -15,28 +18,8 @@ class Server {
         String sendAll;
         new Thread(Server::listener).start();
 
-
-
         while(true) {
-            //System.out.println(numUsers);
             TimeUnit.SECONDS.sleep(1);
-            // Q.lock()
-            // message = Q.dequeue()
-            // Q.unlock()
-            // user.writeMessage(message)
-            /*
-            Old code
-
-            if (numUsers == 2) {
-                for (Mediator mediator : allUsers) {
-                    mediator.writeMessage("Hello worfhsjklafskjdhld\n");
-                    TimeUnit.SECONDS.sleep(4);
-                    mediator.writeMessage("Message 2 comin' at you!\n");
-                    TimeUnit.SECONDS.sleep(4);
-                    mediator.writeMessage("Close\n");
-                }
-                break;
-            */
             if(!(sendAll = messageQueue.deq()).equals("")) {
                 for (Mediator mediator : allUsers) {
                     try {
@@ -50,6 +33,7 @@ class Server {
 
     static private void listener(){
         ServerSocket welcomeSocket;
+        String userName;
         try {
             welcomeSocket = new ServerSocket(9090);
         }
@@ -58,15 +42,42 @@ class Server {
             return;
         }
 
-        while(true) {
-            Socket connectionSocket;
+        outside: while(true) {
+            Socket connection;
             Mediator newMediator;
 
             try {
-                connectionSocket = welcomeSocket.accept();
-                newMediator = new Mediator(connectionSocket);
+                connection = welcomeSocket.accept();
+                BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                DataOutputStream outToClient = new DataOutputStream(connection.getOutputStream());
+                boolean userNameTaken;
+                while(true) {
+                    userNameTaken = false;
+                    try {
+                        userName = inFromClient.readLine();
+                    }catch (Exception e){
+                        continue outside;
+                    }
+                    for(Mediator mediator : allUsers){
+                        try {
+                            if (userName.equals(mediator.getUserName())) {
+                                userNameTaken = true;
+                            }
+                        }catch (Exception e) {}
+                    }
+                    if(userNameTaken){
+                        outToClient.writeBytes("Username taken\n");
+                    }
+                    else{
+                        outToClient.writeBytes("\n");
+                        break;
+                    }
+                }
+
+                newMediator = new Mediator(connection, numUsers, userName);
                 new Thread(newMediator).start();
-                newMediator.writeMessage("Welcome to the chat room!\n");
+                newMediator.writeMessage("Welcome to the chat room, " + userName + "!\n");
+                newMediator.writeMessage("Type a message to start chatting or type 'exit' to leave\n");
             }catch(Exception e){
                 e.printStackTrace();
                 return;
@@ -82,5 +93,9 @@ class Server {
         messageQueue.enq(message);
     }
 
+    public static void killMediator(int userIndex){
+        allUsers[userIndex] = null;
+        return;
+    }
 
 }
