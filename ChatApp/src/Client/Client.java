@@ -7,7 +7,7 @@ import java.net.*;
 import java.lang.Thread;
 import java.util.Scanner;
 
-class Client
+class Client implements Runnable
 {
     private static Socket clientSocket;
     private static String userName;
@@ -36,7 +36,7 @@ class Client
         }
 
 
-        new Thread(Client::userInput).start();
+        new Thread(new Client()).start();
 
         while(!sentence.equals("Close")) {
             try {
@@ -50,7 +50,7 @@ class Client
 
     }
 
-    static private void userInput(){
+    public void run(){
         // In this method we need to get user input somehow and then send it to the server using the following lines
         // of code
         String sentence;

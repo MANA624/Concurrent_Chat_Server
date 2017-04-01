@@ -9,14 +9,14 @@ import java.net.*;
 import java.util.concurrent.TimeUnit;
 import java.lang.Thread;
 
-class Server {
+class Server implements Runnable{
     private static Mediator allUsers[] = new Mediator[10];
     private static int numUsers = 0;
     private static Queue messageQueue = new Queue(20);
 
     public static void main(String args[]) throws Exception {
         String sendAll;
-        new Thread(Server::listener).start();
+        new Thread(new Server()).start();
 
         while(true) {
             TimeUnit.SECONDS.sleep(1);
@@ -31,7 +31,7 @@ class Server {
 
     }
 
-    static private void listener(){
+     public void run(){
         ServerSocket welcomeSocket;
         String userName;
         try {
