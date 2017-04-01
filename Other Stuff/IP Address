@@ -1,0 +1,9 @@
+ssh mani4805@eces-shell@colorado.edu
+Of eces-shell@colorado.edu
+128.138.97.139
+
+Or connect and type:
+/sbin/ifconfig -a
+And check    
+em1    
+inet addr:
