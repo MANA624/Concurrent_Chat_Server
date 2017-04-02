@@ -9,17 +9,28 @@ import java.util.Scanner;
 
 class Client implements Runnable
 {
+    public static final String ANSI_RESET = "\u001B[0m";
+    // public static final String ANSI_BLACK = "\u001B[30m";
+    // public static final String ANSI_RED = "\u001B[31m";
+    // public static final String ANSI_GREEN = "\u001B[32m";
+    // public static final String ANSI_YELLOW = "\u001B[33m";
+    // public static final String ANSI_BLUE = "\u001B[34m";
+    // public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    // public static final String ANSI_WHITE = "\u001B[37m";
+
     private static Socket clientSocket;
     private static String userName;
     public static void main(String args[]) throws Exception
     {
         BufferedReader inFromServer;
-        String sentence = "";
+        String sentence;
         Scanner reader = new Scanner(System.in);
         System.out.print("Type your name: ");
         userName = reader.nextLine();
         try {
-            clientSocket = new Socket("localhost", 9090);
+            clientSocket = new Socket("", 9090);
+            System.out.println("Here");
             inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
             outToServer.writeBytes(userName + "\n");
@@ -35,7 +46,6 @@ class Client implements Runnable
             return;
         }
 
-
         new Thread(new Client()).start();
 
         while(!sentence.equals("Close")) {
@@ -44,7 +54,11 @@ class Client implements Runnable
             }catch(Exception e){
                 break;
             }
-            System.out.println(sentence);
+            if(sentence == null){
+                break;
+            }
+            //System.out.println(sentence);
+            System.out.println(ANSI_CYAN + sentence + ANSI_RESET);
         }
         clientSocket.close();
 

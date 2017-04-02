@@ -10,7 +10,8 @@ import java.util.concurrent.TimeUnit;
 import java.lang.Thread;
 
 class Server implements Runnable{
-    private static Mediator allUsers[] = new Mediator[10];
+    private final static int maxUsers = 10;
+    private static Mediator allUsers[] = new Mediator[maxUsers];
     private static int numUsers = 0;
     private static Queue messageQueue = new Queue(20);
 
@@ -22,9 +23,9 @@ class Server implements Runnable{
             TimeUnit.SECONDS.sleep(1);
             if(!(sendAll = messageQueue.deq()).equals("")) {
                 for (Mediator mediator : allUsers) {
-                    try {
+                    if(mediator != null){
                         mediator.writeMessage(sendAll + "\n");
-                    }catch (Exception e){}
+                    }
                 }
             }
         }
@@ -82,8 +83,19 @@ class Server implements Runnable{
                 e.printStackTrace();
                 return;
             }
+            int i = 0;
+            while(allUsers[i] != null && i < maxUsers){
+                i++;
+            }
+            if(i < maxUsers) {
+                allUsers[numUsers] = newMediator;
+            }
+            else{
+                try {
+                    newMediator.writeMessage("There is currntly no room in the chat room. Please try agian later\n");
+                }catch (Exception e) {}
 
-            allUsers[numUsers] = newMediator;
+            }
             numUsers++;
         }
     }
