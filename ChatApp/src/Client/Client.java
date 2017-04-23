@@ -30,7 +30,6 @@ class Client implements Runnable
         userName = reader.nextLine();
         try {
             clientSocket = new Socket("", 9090);
-            System.out.println("Here");
             inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
             outToServer.writeBytes(userName + "\n");
