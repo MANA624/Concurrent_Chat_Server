@@ -9,10 +9,10 @@ import java.net.*;
 import java.util.concurrent.TimeUnit;
 import java.lang.Thread;
 
-class Server implements Runnable{
+public class Server implements Runnable{
     private final static int maxUsers = 10;
     private static Mediator allUsers[] = new Mediator[maxUsers];
-    private static int numUsers = 0;
+    // private static int numUsers = 0;
     private static Queue messageQueue = new Queue(20);
 
     public static void main(String args[]) throws Exception {
@@ -22,9 +22,15 @@ class Server implements Runnable{
         while(true) {
             TimeUnit.SECONDS.sleep(1);
             if(!(sendAll = messageQueue.deq()).equals("")) {
-                for (Mediator mediator : allUsers) {
-                    if(mediator != null){
-                        mediator.writeMessage(sendAll + "\n");
+//                for (Mediator mediator : allUsers) {
+//                    if(mediator != null){
+//                        mediator.writeMessage(sendAll + "\n");
+//                    }
+//                }
+                for(int i=0; i<maxUsers; i++){
+                    if(allUsers[i] != null){
+                        // System.out.println(i);
+                        allUsers[i].writeMessage(sendAll + "\n");
                     }
                 }
             }
@@ -61,10 +67,12 @@ class Server implements Runnable{
                     }
                     for(Mediator mediator : allUsers){
                         try {
-                            if (userName.equals(mediator.getUserName())) {
+                            if (mediator != null && userName.equals(mediator.getUserName())) {
                                 userNameTaken = true;
                             }
-                        }catch (Exception e) {}
+                        }catch (Exception e) {
+                            System.out.println("THIS ERROR");
+                        }
                     }
                     if(userNameTaken){
                         outToClient.writeBytes("Username taken\n");
@@ -75,10 +83,6 @@ class Server implements Runnable{
                     }
                 }
 
-                newMediator = new Mediator(connection, numUsers, userName);
-                new Thread(newMediator).start();
-                newMediator.writeMessage("Welcome to the chat room, " + userName + "!\n");
-                newMediator.writeMessage("Type a message to start chatting or type 'exit' to leave\n");
             }catch(Exception e){
                 e.printStackTrace();
                 return;
@@ -87,16 +91,33 @@ class Server implements Runnable{
             while(allUsers[i] != null && i < maxUsers){
                 i++;
             }
+            try {
+                newMediator = new Mediator(connection, i, userName);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                return;
+            }
             if(i < maxUsers) {
-                allUsers[numUsers] = newMediator;
+                try {
+                    allUsers[i] = newMediator;
+                    new Thread(newMediator).start();
+                    newMediator.writeMessage("Welcome to the chat room, " + userName + "!\n");
+                    newMediator.writeMessage("Type a message to start chatting or type 'exit' to leave\n");
+                }
+                catch (Exception e){
+                    System.out.println("Hey!");
+                }
             }
             else{
                 try {
-                    newMediator.writeMessage("There is currntly no room in the chat room. Please try agian later\n");
-                }catch (Exception e) {}
+                    newMediator.writeMessage("There is currently no room in the chat room. Please try again later\n");
+                }catch (Exception e) {
+                    // e.printStackTrace();
+                }
 
             }
-            numUsers++;
+            // numUsers++;
         }
     }
 
@@ -106,8 +127,10 @@ class Server implements Runnable{
     }
 
     public static void killMediator(int userIndex){
+        // System.out.println("Mediator " + allUsers[userIndex].getUserName() + " killed");
         allUsers[userIndex] = null;
-        return;
+        // numUsers--;
+
     }
 
 }

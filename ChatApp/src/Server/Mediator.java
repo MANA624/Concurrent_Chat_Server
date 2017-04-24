@@ -10,15 +10,20 @@ public class Mediator implements Runnable{
     private Socket connection;
     private int userIndex;
     private String userName;
+    private volatile boolean finished = false;
     public Mediator(Socket _connection, int _userIndex, String _userName) throws Exception{
         this.connection = _connection;
         userIndex = _userIndex;
         userName = _userName;
     }
 
-    public void writeMessage(String message) throws Exception{
-        DataOutputStream outToClient = new DataOutputStream(connection.getOutputStream());
-        outToClient.writeBytes(message);
+    public void writeMessage(String message){
+        try {
+            DataOutputStream outToClient = new DataOutputStream(connection.getOutputStream());
+            outToClient.writeBytes(message);
+        }catch (java.io.IOException E){
+            //killMediator(userIndex);
+        }
     }
 
     public void run(){
@@ -32,7 +37,7 @@ public class Mediator implements Runnable{
             System.out.println("Unable to create buffer");
             return;
         }
-        while(true) {
+        while(!finished) {
             try {
                 clientSentence = inFromClient.readLine();
                 if(clientSentence == null){

@@ -22,7 +22,7 @@ public class Client implements Runnable{
 
         System.out.print("Type your name: ");
         userName = inFromUser.readLine();
-        System.out.println(userName);
+        // System.out.println(userName);
 
         try {
             connection = new Socket("", 9090);

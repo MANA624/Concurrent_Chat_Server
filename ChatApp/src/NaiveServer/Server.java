@@ -39,7 +39,7 @@ public class Server implements Runnable{
                     DataOutputStream outToClient;
                     try {
                         outToClient = new DataOutputStream(connections[j].getOutputStream());
-                        outToClient.writeBytes(clientSentence + "\n");
+                        outToClient.writeBytes(usernames[i] + ": " + clientSentence + "\n");
                     }catch (Exception e){
                         connections[j] = null;
                         usernames[j] = null;
@@ -62,7 +62,7 @@ public class Server implements Runnable{
             e.printStackTrace();
             return;
         }
-        drugAddiction: while(true) {
+        outside: while(true) {
             while (true) {
                 try {
                     connection = welcomeSocket.accept();
@@ -70,18 +70,13 @@ public class Server implements Runnable{
                     outToClient = new DataOutputStream(connection.getOutputStream());
                     while (true) {
                         userNameTaken = false;
-                        try {
-                            userName = inFromClient.readLine();
-                        } catch (Exception e) {
-                            continue drugAddiction;
-                        }
+                        userName = inFromClient.readLine();
+
                         for (int i=0; i<numConnections; i++) {
-                            try {
-                                if (userName.equals(usernames[i])) {
-                                    userNameTaken = true;
-                                }
-                            } catch (Exception e) {
+                            if (userName.equals(usernames[i])) {
+                                userNameTaken = true;
                             }
+
                         }
                         if (userNameTaken) {
                             outToClient.writeBytes("Username taken\n");
@@ -92,13 +87,13 @@ public class Server implements Runnable{
                     }
                     if(!inFromClient.readLine().equals("okay")){
                         System.out.println("What happened?");
-                        break drugAddiction;
+                        break outside;
                     }
                     outToClient.writeBytes("Welcome to the chat room, " + userName + "!\n");
                     outToClient.writeBytes("Type a message to start chatting or type 'exit' to leave\n");
                 } catch (Exception e) {
                     System.out.println("User bailed!");
-                    return;
+                    continue outside;
                 }
                 int i = 0;
                 while (connections[i] != null && i < CAPACITY) {
