@@ -9,8 +9,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.concurrent.TimeUnit;
 
-// The following is a threaded application to test the performance of the respective servers, since that is what we are
-// trying to test, not the clients.
+// The following is a threaded application to test the performance of the respective servers (not the clients).
 class ServerTest {
     private static final int NUM_TESTERS = 1;
     private String name;
@@ -18,7 +17,7 @@ class ServerTest {
     private Socket connection;
     private DataOutputStream outToServer;
 
-    public ServerTest(String name, boolean isNaive) throws Exception{
+    private ServerTest(String name, boolean isNaive) throws Exception{
         String sentence;
         this.name = name;
         try {
@@ -60,7 +59,7 @@ class ServerTest {
     }
 
     public static void main(String[] args){
-        System.out.println("Hello wrold!");
+        System.out.println("Hello world!");
         try {
             ServerTest test1 = new ServerTest("bob", false);
         }catch (Exception e){}

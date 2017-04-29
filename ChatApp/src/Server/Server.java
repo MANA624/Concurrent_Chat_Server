@@ -10,32 +10,28 @@ import java.util.concurrent.TimeUnit;
 import java.lang.Thread;
 
 public class Server implements Runnable{
-    private final static int maxUsers = 10;
+    private final static int maxUsers = 20;
     private static Mediator allUsers[] = new Mediator[maxUsers];
-    // private static int numUsers = 0;
     private static Queue messageQueue = new Queue(20);
 
     public static void main(String args[]) throws Exception {
         String sendAll;
         new Thread(new Server()).start();
 
+        //While the server is running
         while(true) {
             TimeUnit.SECONDS.sleep(1);
+            //Index through an array of each user's messages
             if(!(sendAll = messageQueue.deq()).equals("")) {
-//                for (Mediator mediator : allUsers) {
-//                    if(mediator != null){
-//                        mediator.writeMessage(sendAll + "\n");
-//                    }
-//                }
                 for(int i=0; i<maxUsers; i++){
+                    //if a client has submitted a message,
                     if(allUsers[i] != null){
-                        // System.out.println(i);
+                        //send that message to all clients
                         allUsers[i].writeMessage(sendAll + "\n");
                     }
                 }
             }
         }
-
     }
 
      public void run(){
@@ -62,18 +58,24 @@ public class Server implements Runnable{
                     userNameTaken = false;
                     try {
                         userName = inFromClient.readLine();
-                    }catch (Exception e){
+                    }
+                    //if the server is waiting to read a client username, but they disconnect before they do
+                    catch (Exception e){
                         continue outside;
                     }
+
+                    //Ensure server takes in unique usernames from clients
                     for(Mediator mediator : allUsers){
                         try {
+                            //if there is a user and the requested userName matches a pre-existing username
                             if (mediator != null && userName.equals(mediator.getUserName())) {
                                 userNameTaken = true;
                             }
                         }catch (Exception e) {
-                            System.out.println("THIS ERROR");
+                            System.out.println("Username uniqueness check failure");
                         }
                     }
+                    //send Username taken to client class who will then inform the client
                     if(userNameTaken){
                         outToClient.writeBytes("Username taken\n");
                     }
@@ -87,10 +89,12 @@ public class Server implements Runnable{
                 e.printStackTrace();
                 return;
             }
+            //While there is room in the chat room add new connections
             int i = 0;
-            while(allUsers[i] != null && i < maxUsers){
+            while(i < maxUsers && allUsers[i] != null) {
                 i++;
             }
+
             try {
                 newMediator = new Mediator(connection, i, userName);
             }
@@ -100,6 +104,7 @@ public class Server implements Runnable{
             }
             if(i < maxUsers) {
                 try {
+                    //Welcome each client to the chat-room and get them started
                     allUsers[i] = newMediator;
                     new Thread(newMediator).start();
                     newMediator.writeMessage("Welcome to the chat room, " + userName + "!\n");
@@ -109,15 +114,14 @@ public class Server implements Runnable{
                     System.out.println("Hey!");
                 }
             }
-            else{
+            //There is no room in the chat room
+            else {
                 try {
                     newMediator.writeMessage("There is currently no room in the chat room. Please try again later\n");
-                }catch (Exception e) {
-                    // e.printStackTrace();
+                } catch (Exception e) {
+                    System.out.println("Failed to write 'no room' to the user");
                 }
-
             }
-            // numUsers++;
         }
     }
 
@@ -126,11 +130,8 @@ public class Server implements Runnable{
         messageQueue.enq(message);
     }
 
-    public static void killMediator(int userIndex){
-        // System.out.println("Mediator " + allUsers[userIndex].getUserName() + " killed");
+    //if client exits the chat room, remove mediator
+    static void killMediator(int userIndex){
         allUsers[userIndex] = null;
-        // numUsers--;
-
     }
-
 }

@@ -9,23 +9,22 @@ import java.util.Scanner;
 
 class Client implements Runnable
 {
-    public static final String ANSI_RESET = "\u001B[0m";
-    // public static final String ANSI_BLACK = "\u001B[30m";
-    // public static final String ANSI_RED = "\u001B[31m";
-    // public static final String ANSI_GREEN = "\u001B[32m";
-    // public static final String ANSI_YELLOW = "\u001B[33m";
-    // public static final String ANSI_BLUE = "\u001B[34m";
-    // public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    // public static final String ANSI_WHITE = "\u001B[37m";
+    //Color code messaging, distinguishing typing from sent messages
+    private static final String ANSI_RESET = "\u001B[0m";
+    private static final String ANSI_CYAN = "\u001B[36m";
 
+    //create a new socket(end point for communication) for the client with a username
     private static Socket clientSocket;
     private static String userName;
+
     public static void main(String args[]) throws Exception
     {
-        BufferedReader inFromServer;
+        //Set-up Client Connection and Interface
+        BufferedReader inFromServer; //reads text from a character-input stream
         String sentence;
         Scanner reader = new Scanner(System.in);
+
+        //Ask user for chat identification
         System.out.print("Type your name: ");
         userName = reader.nextLine();
         try {
@@ -34,6 +33,8 @@ class Client implements Runnable
             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
             outToServer.writeBytes(userName + "\n");
             sentence = inFromServer.readLine();
+
+            //Ensure a unique username
             while(sentence.equals("Username taken")){
                 System.out.println("Username taken!\nType your name: ");
                 userName = reader.nextLine();
@@ -47,16 +48,16 @@ class Client implements Runnable
 
         new Thread(new Client()).start();
 
-        while(!sentence.equals("Close")) {
+        //While the server is running, print out chat messages to clients
+        while(true) {
             try {
                 sentence = inFromServer.readLine();
             }catch(Exception e){
                 break;
             }
-            if(sentence == null){
+            if(sentence == null) {
                 break;
             }
-            //System.out.println(sentence);
             System.out.println(ANSI_CYAN + sentence + ANSI_RESET);
         }
         clientSocket.close();
@@ -64,8 +65,7 @@ class Client implements Runnable
     }
 
     public void run(){
-        // In this method we need to get user input somehow and then send it to the server using the following lines
-        // of code
+        // Get user input and send it to the server
         String sentence;
         DataOutputStream outToServer;
 
@@ -76,24 +76,30 @@ class Client implements Runnable
         }
         catch(Exception exe) {
             System.out.println("Connection to server failed");
-            //make sure application doesn't close on return
             return;
         }
         while(true) {
             try {
                 // Taking in client input
                 sentence = inFromClient.readLine();
+
+                //Allow client to exit chat room
                 if(sentence.equals("exit")){
                     clientSocket.close();
                     break;
                 }
 
+
             } catch (Exception exe) {
                 System.out.println("Failure to take in user input");
+                //If user input into sentence fails, override the failed message with ""
                 sentence = "";
             }
             try{
-                outToServer.writeBytes(sentence + '\n');
+                if(sentence.trim().length() > 0 ) {
+                    //Type client's sentence out to server
+                    outToServer.writeBytes(sentence + '\n');
+                }
             }catch (Exception e){
                 System.out.println("Connection to server lost!!!");
                 try {
