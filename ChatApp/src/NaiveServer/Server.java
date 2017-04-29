@@ -14,7 +14,6 @@ public class Server implements Runnable{
 
     public static void main(String[] args) throws Exception{
         String clientSentence;
-        String capitalizedSentence;
         for(int i=0; i<numConnections; i++){
             connections[i] = null;
         }

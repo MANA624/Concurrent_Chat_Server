@@ -6,7 +6,7 @@ import java.net.*;
 import static Server.Server.killMediator;
 import static Server.Server.writeQueue;
 
-/* Mediator is the intermediate line of communication between the Client and the Server classes*/
+// Mediator is the intermediate line of communication between the Client and the Server classes
 public class Mediator implements Runnable{
     private Socket connection;
     private int userIndex;
