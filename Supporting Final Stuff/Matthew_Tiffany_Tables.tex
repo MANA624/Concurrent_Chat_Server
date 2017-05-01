@@ -1,0 +1,176 @@
+\documentclass[12pt]{article}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{\baselineskip}
+
+\usepackage{enumerate}
+\usepackage{listings}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{multirow}
+
+
+\begin{document}
+
+CSCI 4830 Spring 2017 \hfill Final Project Data\\
+Matthew Niemiec \\
+Tiffany Christensen
+
+\hrulefill
+
+	The results from the testing are given in the following two tables, the first for the Naive server, and the second for the threaded server. The two variables that we change are: the number of threads requesting access to the server, and the amount of data we send at one time. We did this over 5 trials. The results on the writeup are averaged.
+	
+	\begin{center}
+	
+	\begin{tabular}{|p{40pt} | p{100pt} p{100pt} p{100pt} |}
+\hline
+\multicolumn{4}{|p{370pt}|}{\multirow{2}{370pt}{\centering{\textbf{Threaded Server 1}}}} \\
+\multicolumn{4}{|c|}{} \\ \hline
+ & \centering{Simple Message} & \hfil Epidode 5 & \hfil All Epidodes \hfil \\ \hline \hline
+\centering{n=1} & \centering{1041} & \hfil 1037 & \hfil 1443 \hfil \\ \hline
+\centering{n=2} & \centering{2001} & \hfil 2343 & \hfil 4042 \hfil \\ \hline
+\centering{n=4} & \centering{4002} & \hfil 5421 & \hfil 13203 \hfil \\ \hline
+\centering{n=8} & \centering{8010} & \hfil 13276 & \hfil 42685 \hfil \\ \hline
+
+\end{tabular}
+
+\begin{tabular}{|p{40pt} | p{100pt} p{100pt} p{100pt} |}
+\hline
+\multicolumn{4}{|p{370pt}|}{\multirow{2}{370pt}{\centering{\textbf{Threaded Server 2}}}} \\
+\multicolumn{4}{|c|}{} \\ \hline
+ & \centering{Simple Message} & \hfil Epidode 5 & \hfil All Epidodes \hfil \\ \hline \hline
+\centering{n=1} & \centering{1039} & \hfil 1087 & \hfil 1851 \hfil \\ \hline
+\centering{n=2} & \centering{2001} & \hfil 2405 & \hfil 4387 \hfil \\ \hline
+\centering{n=4} & \centering{4003} & \hfil 5390 & \hfil 12942 \hfil \\ \hline
+\centering{n=8} & \centering{8010} & \hfil 13338 & \hfil 43590 \hfil \\ \hline
+
+\end{tabular}
+
+\begin{tabular}{|p{40pt} | p{100pt} p{100pt} p{100pt} |}
+\hline
+\multicolumn{4}{|p{370pt}|}{\multirow{2}{370pt}{\centering{\textbf{Threaded Server 3}}}} \\
+\multicolumn{4}{|c|}{} \\ \hline
+ & \centering{Simple Message} & \hfil Epidode 5 & \hfil All Epidodes \hfil \\ \hline \hline
+\centering{n=1} & \centering{1041} & \hfil 1082 & \hfil 1446 \hfil \\ \hline
+\centering{n=2} & \centering{2001} & \hfil 2338 & \hfil 4545 \hfil \\ \hline
+\centering{n=4} & \centering{4002} & \hfil 5430 & \hfil 12617 \hfil \\ \hline
+\centering{n=8} & \centering{8010} & \hfil 13772 & \hfil 42524 \hfil \\ \hline
+
+\end{tabular}
+
+\begin{tabular}{|p{40pt} | p{100pt} p{100pt} p{100pt} |}
+\hline
+\multicolumn{4}{|p{370pt}|}{\multirow{2}{370pt}{\centering{\textbf{Threaded Server 4}}}} \\
+\multicolumn{4}{|c|}{} \\ \hline
+ & \centering{Simple Message} & \hfil Epidode 5 & \hfil All Epidodes \hfil \\ \hline \hline
+\centering{n=1} & \centering{1039} & \hfil 1088 & \hfil 1456 \hfil \\ \hline
+\centering{n=2} & \centering{2001} & \hfil 2318 & \hfil 4184 \hfil \\ \hline
+\centering{n=4} & \centering{4002} & \hfil 5591 & \hfil 13115 \hfil \\ \hline
+\centering{n=8} & \centering{8010} & \hfil 13093 & \hfil 44795 \hfil \\ \hline
+
+\end{tabular}
+
+\begin{tabular}{|p{40pt} | p{100pt} p{100pt} p{100pt} |}
+\hline
+\multicolumn{4}{|p{370pt}|}{\multirow{2}{370pt}{\centering{\textbf{Threaded Server 5}}}} \\
+\multicolumn{4}{|c|}{} \\ \hline
+ & \centering{Simple Message} & \hfil Epidode 5 & \hfil All Epidodes \hfil \\ \hline \hline
+\centering{n=1} & \centering{1040} & \hfil 1086 & \hfil 1444 \hfil \\ \hline
+\centering{n=2} & \centering{2001} & \hfil 2325 & \hfil 4196 \hfil \\ \hline
+\centering{n=4} & \centering{4003} & \hfil 5505 & \hfil 11806 \hfil \\ \hline
+\centering{n=8} & \centering{8009} & \hfil 14458 & \hfil 43480 \hfil \\ \hline
+
+\end{tabular}
+
+\newpage
+	
+\begin{tabular}{|p{40pt} | p{100pt} p{100pt} p{100pt} |}
+\hline
+\multicolumn{4}{|p{370pt}|}{\multirow{2}{370pt}{\centering{\textbf{Naive Server 1}}}} \\
+\multicolumn{4}{|c|}{} \\ \hline
+ & \centering{Simple Message} & \hfil Epidode 5 & \hfil All Epidodes \hfil \\ \hline \hline
+\centering{n=1} & \centering{80} & \hfil 191 & \hfil 1131 \hfil \\ \hline
+\centering{n=2} & \centering{80} & \hfil 780 & \hfil 3075 \hfil \\ \hline
+\centering{n=4} & \centering{80} & \hfil 2532 & \hfil 14431 \hfil \\ \hline
+\centering{n=8} & \centering{81} & \hfil 7970 & \hfil 58223 \hfil \\ \hline
+
+\end{tabular}
+
+\begin{tabular}{|p{40pt} | p{100pt} p{100pt} p{100pt} |}
+\hline
+\multicolumn{4}{|p{370pt}|}{\multirow{2}{370pt}{\centering{\textbf{Naive Server 2}}}} \\
+\multicolumn{4}{|c|}{} \\ \hline
+ & \centering{Simple Message} & \hfil Epidode 5 & \hfil All Epidodes \hfil \\ \hline \hline
+\centering{n=1} & \centering{80} & \hfil 178 & \hfil 1155 \hfil \\ \hline
+\centering{n=2} & \centering{80} & \hfil 501 & \hfil 3567 \hfil \\ \hline
+\centering{n=4} & \centering{84} & \hfil 1970 & \hfil 13779 \hfil \\ \hline
+\centering{n=8} & \centering{92} & \hfil 8032 & \hfil 57538 \hfil \\ \hline
+
+\end{tabular}
+\begin{tabular}{|p{40pt} | p{100pt} p{100pt} p{100pt} |}
+\hline
+\multicolumn{4}{|p{370pt}|}{\multirow{2}{370pt}{\centering{\textbf{Naive Server 3}}}} \\
+\multicolumn{4}{|c|}{} \\ \hline
+ & \centering{Simple Message} & \hfil Epidode 5 & \hfil All Epidodes \hfil \\ \hline \hline
+\centering{n=1} & \centering{80} & \hfil 168 & \hfil 880 \hfil \\ \hline
+\centering{n=2} & \centering{80} & \hfil 498 & \hfil 3311 \hfil \\ \hline
+\centering{n=4} & \centering{80} & \hfil 1991 & \hfil 13098 \hfil \\ \hline
+\centering{n=8} & \centering{81} & \hfil 7797 & \hfil 57653 \hfil \\ \hline
+
+\end{tabular}
+
+\begin{tabular}{|p{40pt} | p{100pt} p{100pt} p{100pt} |}
+\hline
+\multicolumn{4}{|p{370pt}|}{\multirow{2}{370pt}{\centering{\textbf{Naive Server 4}}}} \\
+\multicolumn{4}{|c|}{} \\ \hline
+ & \centering{Simple Message} & \hfil Epidode 5 & \hfil All Epidodes \hfil \\ \hline \hline
+\centering{n=1} & \centering{80} & \hfil 163 & \hfil 871 \hfil \\ \hline
+\centering{n=2} & \centering{80} & \hfil 515 & \hfil 4230 \hfil \\ \hline
+\centering{n=4} & \centering{80} & \hfil 2102 & \hfil 12538 \hfil \\ \hline
+\centering{n=8} & \centering{81} & \hfil 8285 & \hfil 54662 \hfil \\ \hline
+
+\end{tabular}
+
+\begin{tabular}{|p{40pt} | p{100pt} p{100pt} p{100pt} |}
+\hline
+\multicolumn{4}{|p{370pt}|}{\multirow{2}{370pt}{\centering{\textbf{Naive Server 5}}}} \\
+\multicolumn{4}{|c|}{} \\ \hline
+ & \centering{Simple Message} & \hfil Epidode 5 & \hfil All Epidodes \hfil \\ \hline \hline
+\centering{n=1} & \centering{80} & \hfil 171 & \hfil 1210 \hfil \\ \hline
+\centering{n=2} & \centering{80} & \hfil 692 & \hfil 3133 \hfil \\ \hline
+\centering{n=4} & \centering{80} & \hfil 1983 & \hfil 15800 \hfil \\ \hline
+\centering{n=8} & \centering{80} & \hfil 8262 & \hfil 50090 \hfil \\ \hline
+
+\end{tabular}
+
+\begin{tabular}{|p{40pt} | p{100pt} p{100pt} p{100pt} |}
+\hline
+\multicolumn{4}{|p{370pt}|}{\multirow{2}{370pt}{\centering{\textbf{Average Threaded Server}}}} \\
+\multicolumn{4}{|c|}{} \\ \hline
+ & \centering{Simple Message} & \hfil Epidode 5 & \hfil All Epidodes \hfil \\ \hline \hline
+\centering{n=1} & \centering{1040.0} & \hfil 1076.0 & \hfil 1528.0 \hfil \\ \hline
+\centering{n=2} & \centering{2001} & \hfil 2345.8 & \hfil 4270.8 \hfil \\ \hline
+\centering{n=4} & \centering{4002.4} & \hfil 5467.4 & \hfil 12736.6 \hfil \\ \hline
+\centering{n=8} & \centering{8009.8} & \hfil 13587.4 & \hfil 37415.0 \hfil \\ \hline
+
+\end{tabular}
+	
+	\begin{tabular}{|p{40pt} | p{100pt} p{100pt} p{100pt} |}
+\hline
+\multicolumn{4}{|p{370pt}|}{\multirow{2}{370pt}{\centering{\textbf{Average Naive Server}}}} \\
+\multicolumn{4}{|c|}{} \\ \hline
+ & \centering{Simple Message} & \hfil Epidode 5 & \hfil All Epidodes \hfil \\ \hline \hline
+\centering{n=1} & \centering{80} & \hfil 174.2 & \hfil 1049.4 \hfil \\ \hline
+\centering{n=2} & \centering{80} & \hfil 597.2 & \hfil 3499.2 \hfil \\ \hline
+\centering{n=4} & \centering{80.8} & \hfil 2113.8 & \hfil 13929.2 \hfil \\ \hline
+\centering{n=8} & \centering{83} & \hfil 8069.2 & \hfil 55633.2 \hfil \\ \hline
+
+\end{tabular}
+	
+	
+	\end{center}
+
+
+\end{document}
+
